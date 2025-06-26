@@ -1,95 +1,137 @@
 #include <iostream>
+#include <iomanip>
+#include <string>
+
 using namespace std;
 
-class nilai {
+class NilaiSiswa {
 private:
-	string nim;
-    float nilai[3];
-    float rataRata;
-    int jumlahSiswa;
-    int data[100][3];
-    
+    string nim[100];
+    float nilai1[100];
+    float nilai2[100];
+    float nilai3[100];
+    float rata[100];
+    int jumlah;
+
 public:
-	void menu() {
-		int pilih;
-		
-		do{
-			cout << "\n====Menu====\n";
-			cout << "1. Input Nilai Siswa\n";
-			cout << "2. Tampilkan Tabel Nilai dan Rata-Rata\n";
-			cout << "3. Sorting Rata-rata(Ascending)\n";
-			cout << "4. Sorting Rata-rata(Descending)\n";
-			
-			cout << "Pilih Menu: ";
-			cin >> pilih;
-			
-			switch(pilih) {
-				case 1:
-					input();
-					break;
-				case 2:
-					tampil();
-					break;
-				case 3:
-					sortingAscending();
-					break;
-				case 4:
-					sortingDescending();
-					break;
-				default:
-					cout << "Pilihan Anda tidak Valid\n";
-					break;
-			}
-			
-		}while (pilih !=5);
-	}
-	
-	void input() {
-		cout << "Masukkan jumlah siswa: ";
-                cin >> jumlahSiswa;
-                for (int i = 0; i < jumlahSiswa; i++) {
-                    cout << "\nData siswa ke-" << i + 1 << endl;
-                    cout << "NIM: ";
-                    cin >> data[i].nim;
-                    for (int j = 0; j < 3; j++) {
-                        cout << "Nilai mapel " << j + 1 << ": ";
-                        cin >> data[i].nilai[j];
-                    }
-                    data[i].rataRata = hitungRataRata(data[i].nilai, 3);
+    NilaiSiswa() {
+        jumlah = 0;
+    }
+
+    void hitungRataRata(int index) {
+        rata[index] = (nilai1[index] + nilai2[index] + nilai3[index]) / 3.0f;
+    }
+
+    void inputData() {
+        int n;
+        cout << "\nMasukkan jumlah siswa: ";
+        cin >> n;
+        
+        for (int i = jumlah; i < jumlah + n; i++) {
+            cout << "\nData siswa ke-" << i+1 << endl;
+            cout << "NIM: ";
+            cin >> nim[i];
+            
+            cout << "Nilai Mapel 1: ";
+            cin >> nilai1[i];
+            cout << "Nilai Mapel 2: ";
+            cin >> nilai2[i];
+            cout << "Nilai Mapel 3: ";
+            cin >> nilai3[i];
+            
+            hitungRataRata(i);
+        }
+        jumlah += n;
+        cout << "\nData berhasil dimasukkan!\n";
+    }
+
+    void tampilkanData() {
+        if (jumlah == 0) {
+            cout << "\nBelum ada data siswa!\n";
+            return;
+        }
+        
+        cout << "\n+------------+------------+------------+------------+------------+" << endl;
+        cout << "| NIM        | Mapel 1    | Mapel 2    | Mapel 3    | Rata-rata  |" << endl;
+        cout << "+------------+------------+------------+------------+------------+" << endl;
+        
+        for (int i = 0; i < jumlah; i++) {
+            cout << "| " << setw(10) << left << nim[i] << " | "
+                 << setw(10) << fixed << setprecision(2) << nilai1[i] << " | "
+                 << setw(10) << nilai2[i] << " | "
+                 << setw(10) << nilai3[i] << " | "
+                 << setw(10) << rata[i] << " |" << endl;
+        }
+        cout << "+------------+------------+------------+------------+------------+" << endl;
+    }
+
+    void sortAscending() {
+        for (int i = 0; i < jumlah-1; i++) {
+            for (int j = 0; j < jumlah-i-1; j++) {
+                if (rata[j] > rata[j+1]) {
+                    
+                    swap(nim[j], nim[j+1]);
+                    swap(nilai1[j], nilai1[j+1]);
+                    swap(nilai2[j], nilai2[j+1]);
+                    swap(nilai3[j], nilai3[j+1]);
+                    swap(rata[j], rata[j+1]);
                 }
-	}
-	
-	void tampil() {
-		cout << "\n--------------------------------------------------\n";
-   	    cout << " No  |  NIM  |  M1  |  M2  |  M3  | Rata-rata\n";
-    	cout << "--------------------------------------------------\n";
+            }
+        }
+        cout << "\nData berhasil diurutkan (ascending)!\n";
+    }
 
-    	for (int i = 0; i < jumlah; i++) {
-	        cout << " " << i + 1
-	             << "  |  " << data[i].nim
-	             << "  |  " << data[i].nilai[0]
-	             << "  |  " << data[i].nilai[1]
-	             << "  |  " << data[i].nilai[2]
-	             << "  |  " << data[i].rataRata << endl;
-	    }
-
-	    cout << "--------------------------------------------------\n";
-	}
-	
-	
-	void sortingAscending() {
-		
-	}
-	
-	void sortingDescending() {
-		
-	}
-	
+    void sortDescending() {
+        for (int i = 0; i < jumlah-1; i++) {
+            for (int j = 0; j < jumlah-i-1; j++) {
+                if (rata[j] < rata[j+1]) {
+                   
+                    swap(nim[j], nim[j+1]);
+                    swap(nilai1[j], nilai1[j+1]);
+                    swap(nilai2[j], nilai2[j+1]);
+                    swap(nilai3[j], nilai3[j+1]);
+                    swap(rata[j], rata[j+1]);
+                }
+            }
+        }
+        cout << "\nData berhasil diurutkan (descending)!\n";
+    }
 };
 
 int main() {
-	nilai n;
-	
-	
-	return 0;
+    NilaiSiswa sekolah;
+    int pilihan;
+    
+    do {
+        cout << "\nMENU UTAMA\n";
+        cout << "1. Input Nilai\n";
+        cout << "2. Tampilkan Tabel Rata-rata\n";
+        cout << "3. Sorting Ascending\n";
+        cout << "4. Sorting Descending\n";
+        cout << "5. Keluar\n";
+        cout << "Pilihan: ";
+        cin >> pilihan;
+        
+        switch(pilihan) {
+            case 1:
+                sekolah.inputData();
+                break;
+            case 2:
+                sekolah.tampilkanData();
+                break;
+            case 3:
+                sekolah.sortAscending();
+                break;
+            case 4:
+                sekolah.sortDescending();
+                break;
+            case 5:
+                cout << "\nProgram selesai.\n";
+                break;
+            default:
+                cout << "\nPilihan tidak valid!\n";
+        }
+    } while (pilihan != 5);
+    
+    return 0;
 }
